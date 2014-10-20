@@ -5,7 +5,7 @@ use Carp;
 use Win32API::Registry qw (:ALL);
 use vars qw($VERSION);
 
-$VERSION = '1.00';
+$VERSION = '1.01';
 
 # Create new instance, assign vendor and app names, create Registry folders if they don't exist
 sub new
@@ -91,12 +91,13 @@ Config::Win32 - Load and save configuration values on Windows
 
 =head1 SYNOPSIS
 
-use Config::Win32;
+	 use Config::Win32;
 
-my $cfg = Config::Win32->new("Vendor name", "Application name");
+	 my $cfg = Config::Win32->new("Vendor name", "Application name");
 
-$cfg->save("key", "value");
-print $cfg->load("key");
+	 $cfg->save("key", "value");
+
+	 print $cfg->load("key");
 
 =head1 DESCRIPTION
 
@@ -116,6 +117,7 @@ Makes a configuration variable, and creates keys in the registry for the
 vendor and application names under HKEY_LOCAL_USER/Software.
 
 =item $cfg->app
+
 =item $cfg->app($application_name)
 
 Returns the current application name, or switches to a new application

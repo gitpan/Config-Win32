@@ -11,6 +11,8 @@ WriteMakefile(
     LICENSE          => 'Artistic_2_0',
     PL_FILES         => {},
     MIN_PERL_VERSION => 5.006,
+    PREREQ_PM   => {
+		'Win32API::Registry'	=> '0', 
     CONFIGURE_REQUIRES => {
         'ExtUtils::MakeMaker' => 0,
     },

@@ -62,11 +62,11 @@ DIRFILESEP = ^\
 DFSEP = $(DIRFILESEP)
 NAME = Config::Win32
 NAME_SYM = Config_Win32
-VERSION = 1.00
+VERSION = 1.01
 VERSION_MACRO = VERSION
-VERSION_SYM = 1_00
+VERSION_SYM = 1_01
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 1.00
+XS_VERSION = 1.01
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib\arch
@@ -266,7 +266,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = Config-Win32
-DISTVNAME = Config-Win32-1.00
+DISTVNAME = Config-Win32-1.01
 
 
 # --- MakeMaker macro section:
@@ -521,7 +521,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) "    - inc" >> META_new.yml
 	$(NOECHO) $(ECHO) requires: >> META_new.yml
 	$(NOECHO) $(ECHO) "  perl: 5.006" >> META_new.yml
-	$(NOECHO) $(ECHO) "version: 1.00" >> META_new.yml
+	$(NOECHO) $(ECHO) "version: 1.01" >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
 	$(NOECHO) $(ECHO) Generating META.json
 	$(NOECHO) $(ECHO) { > META_new.json
@@ -563,7 +563,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) "      }" >> META_new.json
 	$(NOECHO) $(ECHO) "   }," >> META_new.json
 	$(NOECHO) $(ECHO) "   \"release_status\" : \"stable\"," >> META_new.json
-	$(NOECHO) $(ECHO) "   \"version\" : \"1.00\"" >> META_new.json
+	$(NOECHO) $(ECHO) "   \"version\" : \"1.01\"" >> META_new.json
 	$(NOECHO) $(ECHO) } >> META_new.json
 	-$(NOECHO) $(MV) META_new.json $(DISTVNAME)/META.json
 
