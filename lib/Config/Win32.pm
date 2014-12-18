@@ -5,7 +5,7 @@ use Carp;
 use Win32API::Registry qw (:ALL);
 use vars qw($VERSION);
 
-$VERSION = '1.01';
+$VERSION = '1.02';
 
 # Create new instance, assign vendor and app names, create Registry folders if they don't exist
 sub new
@@ -35,7 +35,7 @@ sub load
 		Carp::croak "Config: No key provided.";
 	}	
 	RegOpenKeyEx(HKEY_CURRENT_USER, "Software\\" . $self->{vendor_name} . "\\" . $self->{app_name}, 0, KEY_ALL_ACCESS, my $rh) or Carp::croak "Config: Can't access Registry. " . regLastError();
-	RegQueryValueEx($rh, $key, [], my $type, my $value, [] ) or Carp::croak "Config: Can't read value of key " . $key . ". " . regLastError();
+	RegQueryValueEx($rh, $key, [], my $type, my $value, [] ) or return undef;
 	RegCloseKey($rh);
 	return $value;
 }

@@ -13,17 +13,12 @@
 
 #     ABSTRACT_FROM => q[lib/Config/Win32.pm]
 #     AUTHOR => [q[Patrick Lambert <dendory@live.ca>]]
-#     BUILD_REQUIRES => { Test::More=>q[0] }
-#     CONFIGURE_REQUIRES => { ExtUtils::MakeMaker=>q[0] }
-#     LICENSE => q[Artistic_2_0]
-#     MIN_PERL_VERSION => q[5.006]
+#     BUILD_REQUIRES => {  }
+#     CONFIGURE_REQUIRES => {  }
 #     NAME => q[Config::Win32]
-#     PL_FILES => {  }
-#     PREREQ_PM => { Test::More=>q[0] }
+#     PREREQ_PM => { Win32API::Registry=>q[0] }
 #     TEST_REQUIRES => {  }
 #     VERSION_FROM => q[lib/Config/Win32.pm]
-#     clean => { FILES=>q[Config-Win32-*] }
-#     dist => { COMPRESS=>q[gzip -9f], SUFFIX=>q[gz] }
 
 # --- MakeMaker post_initialize section:
 
@@ -32,8 +27,8 @@
 
 # These definitions are from config.sh (via C:/Perl64/lib/Config.pm).
 # They may have been overridden via Makefile.PL or on the command line.
-AR = lib
-CC = cl
+AR = C:\MinGW\bin\ar.exe
+CC = C:\MinGW\bin\gcc.exe
 CCCDLFLAGS =  
 CCDLFLAGS =  
 DLEXT = dll
@@ -41,11 +36,11 @@ DLSRC = dl_win32.xs
 EXE_EXT = .exe
 FULL_AR = 
 LD = link
-LDDLFLAGS = -dll -nologo -nodefaultlib -debug -opt:ref,icf -ltcg  -libpath:"C:\Perl64\lib\CORE"  -machine:AMD64
-LDFLAGS = -nologo -nodefaultlib -debug -opt:ref,icf -ltcg  -libpath:"C:\Perl64\lib\CORE"  -machine:AMD64
+LDDLFLAGS = -mdll -L"C:\Perl64\lib\CORE"
+LDFLAGS = -L"C:\Perl64\lib\CORE"
 LIBC = msvcrt.lib
-LIB_EXT = .lib
-OBJ_EXT = .obj
+LIB_EXT = .a
+OBJ_EXT = .o
 OSNAME = MSWin32
 OSVERS = 5.2
 RANLIB = rem
@@ -57,16 +52,20 @@ VENDORLIBEXP =
 
 
 # --- MakeMaker constants section:
+
+# Get dmake to read long commands like PM_TO_BLIB
+MAXLINELENGTH = 800000
+
 AR_STATIC_ARGS = cr
-DIRFILESEP = ^\
+DIRFILESEP = \\
 DFSEP = $(DIRFILESEP)
 NAME = Config::Win32
 NAME_SYM = Config_Win32
-VERSION = 1.01
+VERSION = 1.02
 VERSION_MACRO = VERSION
-VERSION_SYM = 1_01
+VERSION_SYM = 1_02
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 1.01
+XS_VERSION = 1.02
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib\arch
@@ -128,7 +127,7 @@ INSTALLVENDORHTMLDIR = C:\Perl64\html
 DESTINSTALLVENDORHTMLDIR = $(DESTDIR)$(INSTALLVENDORHTMLDIR)
 PERL_LIB = C:\Perl64\lib
 PERL_ARCHLIB = C:\Perl64\lib
-LIBPERL_A = libperl.lib
+LIBPERL_A = libperl.a
 FIRST_MAKEFILE = Makefile
 MAKEFILE_OLD = Makefile.old
 MAKE_APERL_FILE = Makefile.aperl
@@ -156,7 +155,7 @@ MM_REVISION = 68400
 # BASEEXT = Basename part of FULLEXT. May be just equal FULLEXT. (eg Oracle)
 # PARENT_NAME = NAME without BASEEXT and no trailing :: (eg Foo::Bar)
 # DLBASE  = Basename part of dynamic library. May be just equal BASEEXT.
-MAKE = nmake
+MAKE = C:\Perl64\site\bin\dmake.exe
 FULLEXT = Config\Win32
 BASEEXT = Win32
 PARENT_NAME = Config
@@ -230,11 +229,11 @@ MKPATH = $(ABSPERLRUN) -MExtUtils::Command -e mkpath --
 EQUALIZE_TIMESTAMP = $(ABSPERLRUN) -MExtUtils::Command -e eqtime --
 FALSE = $(ABSPERLRUN)  -e "exit 1" --
 TRUE = $(ABSPERLRUN)  -e "exit 0" --
-ECHO = $(ABSPERLRUN) -l -e "print qq{@ARGV}" --
-ECHO_N = $(ABSPERLRUN)  -e "print qq{@ARGV}" --
+ECHO = $(ABSPERLRUN) -l -e "print qq{{@ARGV}}" --
+ECHO_N = $(ABSPERLRUN)  -e "print qq{{@ARGV}}" --
 UNINST = 0
 VERBINST = 0
-MOD_INSTALL = $(ABSPERLRUN) -MExtUtils::Install -e "install([ from_to => {@ARGV}, verbose => '$(VERBINST)', uninstall_shadows => '$(UNINST)', dir_mode => '$(PERM_DIR)' ]);" --
+MOD_INSTALL = $(ABSPERLRUN) -MExtUtils::Install -e "install([ from_to => {{@ARGV}}, verbose => '$(VERBINST)', uninstall_shadows => '$(UNINST)', dir_mode => '$(PERM_DIR)' ]);" --
 DOC_INSTALL = $(ABSPERLRUN) -MExtUtils::Command::MM -e perllocal_install --
 UNINSTALL = $(ABSPERLRUN) -MExtUtils::Command::MM -e uninstall --
 WARN_IF_OLD_PACKLIST = $(ABSPERLRUN) -MExtUtils::Command::MM -e warn_if_old_packlist --
@@ -255,7 +254,7 @@ TAR = tar
 TARFLAGS = cvf
 ZIP = zip
 ZIPFLAGS = -r
-COMPRESS = gzip -9f
+COMPRESS = gzip --best
 SUFFIX = .gz
 SHAR = shar
 PREOP = $(NOECHO) $(NOOP)
@@ -266,7 +265,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = Config-Win32
-DISTVNAME = Config-Win32-1.01
+DISTVNAME = Config-Win32-1.02
 
 
 # --- MakeMaker macro section:
@@ -288,13 +287,14 @@ DISTVNAME = Config-Win32-1.01
 
 
 # --- MakeMaker pasthru section:
-PASTHRU = -nologo
+PASTHRU = 
 
 # --- MakeMaker special_targets section:
 .SUFFIXES : .xs .c .C .cpp .i .s .cxx .cc $(OBJ_EXT)
 
 .PHONY: all config static dynamic test linkext manifest blibdirs clean realclean disttest distdir
 
+.USESHELL :
 
 
 # --- MakeMaker c_o section:
@@ -477,8 +477,8 @@ clean :: clean_subdirs
 	  pm_to_blib.ts so_locations \
 	  tmon.out 
 	- $(RM_RF) \
-	  *.pdb Config-Win32-* \
-	  blib 
+	  blib dll.base \
+	  dll.exp 
 	  $(NOECHO) $(RM_F) $(MAKEFILE_OLD)
 	- $(MV) $(FIRST_MAKEFILE) $(MAKEFILE_OLD) $(DEV_NULL)
 
@@ -505,7 +505,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) author: >> META_new.yml
 	$(NOECHO) $(ECHO) "  - 'Patrick Lambert <dendory@live.ca>'" >> META_new.yml
 	$(NOECHO) $(ECHO) build_requires: >> META_new.yml
-	$(NOECHO) $(ECHO) "  Test::More: 0" >> META_new.yml
+	$(NOECHO) $(ECHO) "  ExtUtils::MakeMaker: 0" >> META_new.yml
 	$(NOECHO) $(ECHO) configure_requires: >> META_new.yml
 	$(NOECHO) $(ECHO) "  ExtUtils::MakeMaker: 0" >> META_new.yml
 	$(NOECHO) $(ECHO) "dynamic_config: 1" >> META_new.yml
@@ -520,11 +520,11 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) "    - t" >> META_new.yml
 	$(NOECHO) $(ECHO) "    - inc" >> META_new.yml
 	$(NOECHO) $(ECHO) requires: >> META_new.yml
-	$(NOECHO) $(ECHO) "  perl: 5.006" >> META_new.yml
-	$(NOECHO) $(ECHO) "version: 1.01" >> META_new.yml
+	$(NOECHO) $(ECHO) "  Win32API::Registry: 0" >> META_new.yml
+	$(NOECHO) $(ECHO) "version: 1.02" >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
 	$(NOECHO) $(ECHO) Generating META.json
-	$(NOECHO) $(ECHO) { > META_new.json
+	$(NOECHO) $(ECHO) {{ > META_new.json
 	$(NOECHO) $(ECHO) "   \"abstract\" : \"Load and save configuration values on Windows\"," >> META_new.json
 	$(NOECHO) $(ECHO) "   \"author\" : [" >> META_new.json
 	$(NOECHO) $(ECHO) "      \"Patrick Lambert ^<dendory^@live.ca^>\"" >> META_new.json
@@ -534,37 +534,37 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) "   \"license\" : [" >> META_new.json
 	$(NOECHO) $(ECHO) "      \"unknown\"" >> META_new.json
 	$(NOECHO) $(ECHO) "   ]," >> META_new.json
-	$(NOECHO) $(ECHO) "   \"meta-spec\" : {" >> META_new.json
+	$(NOECHO) $(ECHO) "   \"meta-spec\" : {{" >> META_new.json
 	$(NOECHO) $(ECHO) "      \"url\" : \"http://search.cpan.org/perldoc?CPAN::Meta::Spec\"," >> META_new.json
 	$(NOECHO) $(ECHO) "      \"version\" : \"2\"" >> META_new.json
-	$(NOECHO) $(ECHO) "   }," >> META_new.json
+	$(NOECHO) $(ECHO) "   }}," >> META_new.json
 	$(NOECHO) $(ECHO) "   \"name\" : \"Config-Win32\"," >> META_new.json
-	$(NOECHO) $(ECHO) "   \"no_index\" : {" >> META_new.json
+	$(NOECHO) $(ECHO) "   \"no_index\" : {{" >> META_new.json
 	$(NOECHO) $(ECHO) "      \"directory\" : [" >> META_new.json
 	$(NOECHO) $(ECHO) "         \"t\"," >> META_new.json
 	$(NOECHO) $(ECHO) "         \"inc\"" >> META_new.json
 	$(NOECHO) $(ECHO) "      ]" >> META_new.json
-	$(NOECHO) $(ECHO) "   }," >> META_new.json
-	$(NOECHO) $(ECHO) "   \"prereqs\" : {" >> META_new.json
-	$(NOECHO) $(ECHO) "      \"build\" : {" >> META_new.json
-	$(NOECHO) $(ECHO) "         \"requires\" : {" >> META_new.json
-	$(NOECHO) $(ECHO) "            \"Test::More\" : \"0\"" >> META_new.json
-	$(NOECHO) $(ECHO) "         }" >> META_new.json
-	$(NOECHO) $(ECHO) "      }," >> META_new.json
-	$(NOECHO) $(ECHO) "      \"configure\" : {" >> META_new.json
-	$(NOECHO) $(ECHO) "         \"requires\" : {" >> META_new.json
+	$(NOECHO) $(ECHO) "   }}," >> META_new.json
+	$(NOECHO) $(ECHO) "   \"prereqs\" : {{" >> META_new.json
+	$(NOECHO) $(ECHO) "      \"build\" : {{" >> META_new.json
+	$(NOECHO) $(ECHO) "         \"requires\" : {{" >> META_new.json
 	$(NOECHO) $(ECHO) "            \"ExtUtils::MakeMaker\" : \"0\"" >> META_new.json
-	$(NOECHO) $(ECHO) "         }" >> META_new.json
-	$(NOECHO) $(ECHO) "      }," >> META_new.json
-	$(NOECHO) $(ECHO) "      \"runtime\" : {" >> META_new.json
-	$(NOECHO) $(ECHO) "         \"requires\" : {" >> META_new.json
-	$(NOECHO) $(ECHO) "            \"perl\" : \"5.006\"" >> META_new.json
-	$(NOECHO) $(ECHO) "         }" >> META_new.json
-	$(NOECHO) $(ECHO) "      }" >> META_new.json
-	$(NOECHO) $(ECHO) "   }," >> META_new.json
+	$(NOECHO) $(ECHO) "         }}" >> META_new.json
+	$(NOECHO) $(ECHO) "      }}," >> META_new.json
+	$(NOECHO) $(ECHO) "      \"configure\" : {{" >> META_new.json
+	$(NOECHO) $(ECHO) "         \"requires\" : {{" >> META_new.json
+	$(NOECHO) $(ECHO) "            \"ExtUtils::MakeMaker\" : \"0\"" >> META_new.json
+	$(NOECHO) $(ECHO) "         }}" >> META_new.json
+	$(NOECHO) $(ECHO) "      }}," >> META_new.json
+	$(NOECHO) $(ECHO) "      \"runtime\" : {{" >> META_new.json
+	$(NOECHO) $(ECHO) "         \"requires\" : {{" >> META_new.json
+	$(NOECHO) $(ECHO) "            \"Win32API::Registry\" : \"0\"" >> META_new.json
+	$(NOECHO) $(ECHO) "         }}" >> META_new.json
+	$(NOECHO) $(ECHO) "      }}" >> META_new.json
+	$(NOECHO) $(ECHO) "   }}," >> META_new.json
 	$(NOECHO) $(ECHO) "   \"release_status\" : \"stable\"," >> META_new.json
-	$(NOECHO) $(ECHO) "   \"version\" : \"1.01\"" >> META_new.json
-	$(NOECHO) $(ECHO) } >> META_new.json
+	$(NOECHO) $(ECHO) "   \"version\" : \"1.02\"" >> META_new.json
+	$(NOECHO) $(ECHO) }} >> META_new.json
 	-$(NOECHO) $(MV) META_new.json $(DISTVNAME)/META.json
 
 
@@ -644,11 +644,9 @@ distdir : create_distdir distmeta
 
 # --- MakeMaker dist_test section:
 disttest : distdir
-	cd $(DISTVNAME)
-	$(ABSPERLRUN) Makefile.PL 
-	$(MAKE) $(PASTHRU)
-	$(MAKE) test $(PASTHRU)
-	cd ..
+	cd $(DISTVNAME) && $(ABSPERLRUN) Makefile.PL 
+	cd $(DISTVNAME) && $(MAKE) $(PASTHRU)
+	cd $(DISTVNAME) && $(MAKE) test $(PASTHRU)
 
 
 
@@ -663,31 +661,21 @@ ci :
 
 # --- MakeMaker distmeta section:
 distmeta : create_distdir metafile
-	$(NOECHO) cd $(DISTVNAME)
-	$(ABSPERLRUN) -MExtUtils::Manifest=maniadd -e "exit unless -e q{META.yml};\
-eval { maniadd({q{META.yml} => q{Module YAML meta-data (added by MakeMaker)}}) }\
-    or print \"Could not add META.yml to MANIFEST: $$$${'^@'}\n\"" --
-	cd ..
-	$(NOECHO) cd $(DISTVNAME)
-	$(ABSPERLRUN) -MExtUtils::Manifest=maniadd -e "exit unless -f q{META.json};\
-eval { maniadd({q{META.json} => q{Module JSON meta-data (added by MakeMaker)}}) }\
-    or print \"Could not add META.json to MANIFEST: $$$${'^@'}\n\"" --
-	cd ..
+	$(NOECHO) cd $(DISTVNAME) && $(ABSPERLRUN) -MExtUtils::Manifest=maniadd -e "exit unless -e q{{META.yml}};\
+eval {{ maniadd({{q{{META.yml}} => q{{Module YAML meta-data (added by MakeMaker)}}}}) }}\
+    or print \"Could not add META.yml to MANIFEST: $$$${{'^@'}}\n\"" --
+	$(NOECHO) cd $(DISTVNAME) && $(ABSPERLRUN) -MExtUtils::Manifest=maniadd -e "exit unless -f q{{META.json}};\
+eval {{ maniadd({{q{{META.json}} => q{{Module JSON meta-data (added by MakeMaker)}}}}) }}\
+    or print \"Could not add META.json to MANIFEST: $$$${{'^@'}}\n\"" --
 
 
 
 # --- MakeMaker distsignature section:
 distsignature : create_distdir
-	$(NOECHO) cd $(DISTVNAME)
-	$(ABSPERLRUN) -MExtUtils::Manifest=maniadd -e "eval { maniadd({q{SIGNATURE} => q{Public-key signature (added by MakeMaker)}}) }\
-    or print \"Could not add SIGNATURE to MANIFEST: $$$${'^@'}\n\"" --
-	cd ..
-	$(NOECHO) cd $(DISTVNAME)
-	$(TOUCH) SIGNATURE
-	cd ..
-	cd $(DISTVNAME)
-	cpansign -s
-	cd ..
+	$(NOECHO) cd $(DISTVNAME) && $(ABSPERLRUN) -MExtUtils::Manifest=maniadd -e "eval {{ maniadd({{q{{SIGNATURE}} => q{{Public-key signature (added by MakeMaker)}}}}) }}\
+    or print \"Could not add SIGNATURE to MANIFEST: $$$${{'^@'}}\n\"" --
+	$(NOECHO) cd $(DISTVNAME) && $(TOUCH) SIGNATURE
+	cd $(DISTVNAME) && cpansign -s
 
 
 
@@ -856,7 +844,7 @@ $(MAKE_APERL_FILE) : $(FIRST_MAKEFILE) pm_to_blib
 TEST_VERBOSE=0
 TEST_TYPE=test_$(LINKTYPE)
 TEST_FILE = test.pl
-TEST_FILES = t/*.t
+TEST_FILES = 
 TESTDB_SW = -d
 
 testdb :: testdb_$(LINKTYPE)
@@ -866,9 +854,9 @@ test :: $(TEST_TYPE) subdirs-test
 subdirs-test ::
 	$(NOECHO) $(NOOP)
 
+	$(NOECHO) $(ECHO) 'No tests defined for $(NAME) extension.'
 
 test_dynamic :: pure_all
-	$(FULLPERLRUN) "-MExtUtils::Command::MM" "-MTest::Harness" "-e" "undef *Test::Harness::Switches; test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)
 
 testdb_dynamic :: pure_all
 	$(FULLPERLRUN) $(TESTDB_SW) "-I$(INST_LIB)" "-I$(INST_ARCHLIB)" $(TEST_FILE)
@@ -886,7 +874,7 @@ ppd :
 	$(NOECHO) $(ECHO) "    <ABSTRACT>Load and save configuration values on Windows</ABSTRACT>" >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) "    <AUTHOR>Patrick Lambert &lt;dendory@live.ca&gt;</AUTHOR>" >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) "    <IMPLEMENTATION>" >> $(DISTNAME).ppd
-	$(NOECHO) $(ECHO) "        <PERLCORE VERSION=\"5,006,0,0\" />" >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) "        <REQUIRE NAME=\"Win32API::Registry\" />" >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) "        <ARCHITECTURE NAME=\"MSWin32-x64-multi-thread-5.16\" />" >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) "        <CODEBASE HREF=\"\" />" >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) "    </IMPLEMENTATION>" >> $(DISTNAME).ppd
@@ -896,7 +884,7 @@ ppd :
 # --- MakeMaker pm_to_blib section:
 
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
-	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e "pm_to_blib({@ARGV}, '$(INST_LIB)\auto', q[$(PM_FILTER)], '$(PERM_DIR)')" -- \
+	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e "pm_to_blib({{@ARGV}}, '$(INST_LIB)\auto', q[$(PM_FILTER)], '$(PERM_DIR)')" -- \
 	  lib/Config/Win32.pm blib\lib\Config\Win32.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
